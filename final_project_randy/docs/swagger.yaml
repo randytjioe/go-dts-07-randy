@@ -1,0 +1,528 @@
+definitions:
+  models.Comment:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      photo:
+        $ref: '#/definitions/models.Photo'
+      photo_id:
+        type: integer
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+      user_id:
+        type: integer
+    type: object
+  models.Media:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name_m:
+        type: string
+      social_media_url:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+      user_id:
+        type: integer
+    type: object
+  models.Photo:
+    properties:
+      caption:
+        type: string
+      comments:
+        items:
+          $ref: '#/definitions/models.Comment'
+        type: array
+      created_at:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+      user_id:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      age:
+        type: integer
+      comments:
+        items:
+          $ref: '#/definitions/models.Comment'
+        type: array
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      medias:
+        items:
+          $ref: '#/definitions/models.Media'
+        type: array
+      name:
+        type: string
+      password:
+        type: string
+      photos:
+        items:
+          $ref: '#/definitions/models.Photo'
+        type: array
+      updated_at:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /comments/deletecomment/{commentId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete comment identified by given ID
+      parameters:
+      - description: ID of the comment
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Delete comment success
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+        "404":
+          description: Comment Not Found
+      security:
+      - BearerAuth: []
+      summary: Delete comment
+      tags:
+      - comment
+  /comments/getcommentbyid/{commentId}:
+    get:
+      consumes:
+      - application/json
+      description: Get comment identified by given id
+      parameters:
+      - description: ID of the comment
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get comment success
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Comment by Id Not Found
+      security:
+      - BearerAuth: []
+      summary: Get comment
+      tags:
+      - comment
+  /comments/getcomments:
+    get:
+      consumes:
+      - application/json
+      description: Get all comments in mygram
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get all comments success
+          schema:
+            items:
+              $ref: '#/definitions/models.Comment'
+            type: array
+        "401":
+          description: Unauthorized
+        "404":
+          description: Comments Not Found
+      security:
+      - BearerAuth: []
+      summary: Get all comments
+      tags:
+      - comment
+  /comments/updatecomment/{commentId}:
+    put:
+      consumes:
+      - application/json
+      description: Update comment identified by given id
+      parameters:
+      - description: ID of the comment
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update comment success
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Comment Not Found
+      security:
+      - BearerAuth: []
+      summary: Update comment
+      tags:
+      - comment
+  /comments/uploadcomment:
+    post:
+      consumes:
+      - application/json
+      description: Create comment for photo identified by given id
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Create comment success
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Photo Not Found
+      security:
+      - BearerAuth: []
+      summary: Create comment
+      tags:
+      - comment
+  /photo/deletephoto/{photoId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete photo identified by given ID
+      parameters:
+      - description: ID of the photo
+        in: path
+        name: photoId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Delete photo success
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+        "404":
+          description: Photo Not Found
+      security:
+      - BearerAuth: []
+      summary: Delete photo
+      tags:
+      - photo
+  /photo/getphotobyid/{photoId}:
+    get:
+      consumes:
+      - application/json
+      description: Get photo by ID
+      parameters:
+      - description: ID of the photo
+        in: path
+        name: photoId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get photo success
+          schema:
+            $ref: '#/definitions/models.Photo'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Photo Not Found
+      security:
+      - BearerAuth: []
+      summary: Get photo
+      tags:
+      - photo
+  /photo/getphotos:
+    get:
+      consumes:
+      - application/json
+      description: Get all existing photos
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get all photos success
+          schema:
+            items:
+              $ref: '#/definitions/models.Photo'
+            type: array
+        "401":
+          description: Unauthorized
+        "404":
+          description: Photos Not Found
+      security:
+      - BearerAuth: []
+      summary: Get all photos
+      tags:
+      - photo
+  /photo/updatephoto/{photoId}:
+    put:
+      consumes:
+      - application/json
+      description: Update photo identified by given ID
+      parameters:
+      - description: ID of the photo
+        in: path
+        name: photoId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update photo success
+          schema:
+            $ref: '#/definitions/models.Photo'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Photo Not Found
+      security:
+      - BearerAuth: []
+      summary: Update photo
+      tags:
+      - photo
+  /photo/uploadphoto:
+    post:
+      consumes:
+      - application/json
+      description: Create photo to post in mygram
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Create photo success
+          schema:
+            $ref: '#/definitions/models.Photo'
+        "401":
+          description: Unauthorized
+      security:
+      - BearerAuth: []
+      summary: Create photo
+      tags:
+      - photo
+  /socialmedia/deletesocmed/{socialMediaId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete social media identified by given ID
+      parameters:
+      - description: ID of the social media
+        in: path
+        name: socialMediaId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Delete social media success
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+        "404":
+          description: Social Media Not Found
+      security:
+      - BearerAuth: []
+      summary: Delete social media
+      tags:
+      - social media
+  /socialmedia/getsocmedbyid/{socialMediaId}:
+    get:
+      consumes:
+      - application/json
+      description: Get social media identified by given id
+      parameters:
+      - description: ID of the social media
+        in: path
+        name: socialMediaId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get social media success
+          schema:
+            $ref: '#/definitions/models.Media'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Social Media Not Found
+      security:
+      - BearerAuth: []
+      summary: Get social media
+      tags:
+      - social media
+  /socialmedia/getsocmeds:
+    get:
+      consumes:
+      - application/json
+      description: Get all social media in mygram
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get all social media success
+          schema:
+            items:
+              $ref: '#/definitions/models.Media'
+            type: array
+        "401":
+          description: Unauthorized
+        "404":
+          description: Social Media Not Found
+      security:
+      - BearerAuth: []
+      summary: Get all social media
+      tags:
+      - social media
+  /socialmedia/updatesocmed/{socialMediaId}:
+    put:
+      consumes:
+      - application/json
+      description: Update social media identified by given id
+      parameters:
+      - description: ID of the social media
+        in: path
+        name: socialMediaId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update social media success
+          schema:
+            $ref: '#/definitions/models.Media'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Social Media Not Found
+      security:
+      - BearerAuth: []
+      summary: Update social media
+      tags:
+      - social media
+  /socialmedia/uploadsocmed:
+    post:
+      consumes:
+      - application/json
+      description: Create social media of the user
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Create social media success
+          schema:
+            $ref: '#/definitions/models.Media'
+        "401":
+          description: Unauthorized
+      security:
+      - BearerAuth: []
+      summary: Create social media
+      tags:
+      - social media
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login user by email
+      parameters:
+      - description: email
+        in: query
+        name: email
+        required: true
+        type: string
+      - description: password
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login response
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+      summary: Login user
+      tags:
+      - user
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Register new user
+      parameters:
+      - description: username
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: email
+        in: query
+        name: email
+        required: true
+        type: string
+      - description: password
+        in: query
+        name: password
+        required: true
+        type: string
+      - description: age
+        in: query
+        name: age
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Register success response
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Register user
+      tags:
+      - user
+swagger: "2.0"
